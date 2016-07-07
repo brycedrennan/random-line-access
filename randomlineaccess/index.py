@@ -62,6 +62,9 @@ class IndexedOpen(object):
     def __exit__(self, type, value, tb):
         self.close()
 
+    def __len__(self):
+        return self.index.line_count
+
     def __getitem__(self, slice_obj):
         """
         Supports slice operations on the file

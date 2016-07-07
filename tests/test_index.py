@@ -34,6 +34,7 @@ def test_indexed_read_write():
 
     # ensure behaves just like a real list would
     with IndexedOpen(text_file_name) as f:
+        assert len(f) == 100
         for i in range(10):
             assert str(i) == f[i].strip()
 
