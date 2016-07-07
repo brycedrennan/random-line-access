@@ -5,6 +5,8 @@ Quickly access arbitrary line numbers in a text file. A well tested library for 
 **Example Usage**
 
 ```python
+from randomlineaccess import IndexedOpen
+
 # https://raw.githubusercontent.com/redacted/XKCD-password-generator/master/xkcdpass/static/default.txt
 with IndexedOpen('xkcd_wordlist.txt') as indexed_f:
     pw = ' '.join(indexed_f.random_line().strip() for _ in range(4))
