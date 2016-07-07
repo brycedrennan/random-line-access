@@ -1,4 +1,5 @@
 import math
+import os
 import random
 from pathlib import Path
 
@@ -28,6 +29,8 @@ def create_index(file_path, index_path, index_ratio, index_width):
                     idx.write(b)
             idx.seek(2)
             idx.write(i.to_bytes(32, byteorder='big'))
+        t = file_path.stat().st_mtime
+        os.utime(str(index_path), (t, t))
 
 
 class IndexedOpen(object):
@@ -40,14 +43,14 @@ class IndexedOpen(object):
 
     def __init__(self, filepath, encoding=None, errors=None, newline=None, index_ratio=1, index_width=5):
         """
-        Open a text file
+        Open a text file which has it's line numbers indexed.
 
         :param filepath:
         :param encoding:
         :param errors:
         :param newline:
-        :param index_ratio:
-        :param index_width:
+        :param index_ratio:  how close together should indexed lines be? (1=index all lines, 2=index every 2nd line, etc)
+        :param index_width: how many bytes are needed to store the location of lines in the file
         """
         self.filepath = Path(filepath)
         self.file = self.filepath.open(encoding=encoding, errors=errors, newline=newline)
@@ -71,9 +74,13 @@ class IndexedOpen(object):
         """
         start, stop, step = normalize_slice(slice_obj, self.index.line_count)
         if isinstance(slice_obj, slice):
-            return [self._get_line(i) for i in range(start, stop, step)]
+            if step == 1:
+                # if we have a group of lines to read, only use the index to find the first lines
+                return self._get_lines(start, stop)
+            else:
+                return [self._get_lines(i)[0] for i in range(start, stop, step)]
         elif isinstance(slice_obj, int):
-            return self._get_line(start)
+            return self._get_lines(start)[0]
 
     def close(self):
         self.file.close()
@@ -81,7 +88,7 @@ class IndexedOpen(object):
 
     def get_or_create_index(self, index_ratio, index_width):
         """Return an open file-object to the index file"""
-        if not self.index_path.exists():
+        if not self.index_path.exists() or not self.filepath.stat().st_mtime_ns == self.index_path.stat().st_mtime_ns:
             create_index(self.filepath, self.index_path, index_ratio=index_ratio, index_width=index_width)
         return IndexFile(str(self.index_path))
 
@@ -90,13 +97,22 @@ class IndexedOpen(object):
         """the path to the index file"""
         return Path(str(self.filepath) + '.idx')
 
-    def _get_line(self, line_no):
-        line_pointer, lines_away_from_target = self.index.line_location(line_no)
+    def _get_lines(self, start, stop=None):
+        if stop is None:
+            stop = start + 1
+        line_pointer, lines_away_from_target = self.index.line_location(start)
         self.file.seek(line_pointer)
+
         line = self.file.readline()
         for _ in range(lines_away_from_target):
             line = self.file.readline()
-        return line
+
+        lines = [line]
+
+        for _ in range(start + 1, stop):
+            lines.append(self.file.readline())
+
+        return lines
 
     def random_line(self):
         return self[random.randrange(0, self.index.line_count)]
@@ -109,7 +125,7 @@ class IndexFile(object):
         """
         self.index_path = Path(index_file_path)
         self.header_length = 34
-        self.index = self._open_index()
+        self.index_file = self._open_index()
 
     def _open_index(self):
         index = self.index_path.open('rb')
@@ -119,12 +135,12 @@ class IndexFile(object):
         return index
 
     def close(self):
-        self.index.close()
+        self.index_file.close()
 
     def line_location(self, line_no):
         index_line_no = math.floor(line_no / self.index_ratio)
-        self.index.seek(index_line_no * self.index_width + self.header_length)
-        main_file_pointer = self.index.read(self.index_width)
+        self.index_file.seek(index_line_no * self.index_width + self.header_length)
+        main_file_pointer = self.index_file.read(self.index_width)
         main_file_pointer = int.from_bytes(main_file_pointer, byteorder='big')
         lines_away_from_target = line_no % self.index_ratio
         return main_file_pointer, lines_away_from_target
