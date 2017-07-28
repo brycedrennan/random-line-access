@@ -80,8 +80,7 @@ class IndexedOpen(object):
             if step == 1:
                 # if we have a group of lines to read, only use the index to find the first lines
                 return self._get_lines(start, stop)
-            else:
-                return [self._get_lines(i)[0] for i in range(start, stop, step)]
+            return [self._get_lines(i)[0] for i in range(start, stop, step)]
         elif isinstance(slice_obj, int):
             return self._get_lines(start)[0]
 

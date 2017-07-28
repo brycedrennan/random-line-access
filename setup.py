@@ -1,4 +1,4 @@
-from distutils.core import setup
+from distutils.core import setup  # noqa
 
 __version__ = '1.05'
 
