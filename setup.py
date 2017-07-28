@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-from randomlineaccess import __version__
+__version__ = '1.05'
 
 long_description = """
 Quickly access arbitrary line numbers in a text file. A well tested library for Python 3.
@@ -28,6 +28,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Topic :: Text Processing :: Indexing",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",

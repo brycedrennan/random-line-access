@@ -43,3 +43,6 @@ Thumbs.db
 .cache
 dist
 MANIFEST
+
+.direnv
+randomlineaccess.egg-info

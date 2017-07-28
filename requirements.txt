@@ -1,1 +1,12 @@
-pytest
+# dev requirements
+pytest  # testing
+
+# linters
+pydocstyle
+pylint
+pylama
+pylama_pylint
+tox
+
+# install production dependencies from setup.py
+-e .
