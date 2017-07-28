@@ -1,5 +1,6 @@
 import os
 import tempfile
+import time
 
 from randomlineaccess.index import IndexedOpen
 
@@ -62,6 +63,8 @@ def test_index_updates():
     # no changes, not modified
     with IndexedOpen(text_file_name) as f:
         assert first_index_updated_time == f.index.index_path.stat().st_mtime
+
+    time.sleep(.01)
 
     # change text file
     with open(text_file_name, 'w') as text_file:
