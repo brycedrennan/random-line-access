@@ -3,8 +3,9 @@ python:
   - "3.6"
 
 install: "pip install -r requirements.txt"
-matrix:
+jobs:
   include:
-    - env: TEST_CMD=pytest
-    - env: TEST_CMD=pylama
-script: $TEST_CMD
+    - stage: test
+      script: pylama
+    -
+      script: pytest
