@@ -2,7 +2,11 @@
 
 Quickly access arbitrary line numbers in a text file. A well tested library for Python 3.
 
-**Example Usage**
+## Installation
+
+    pip install random-line-access
+
+## Usage
 
 ```python
 from randomlineaccess import IndexedOpen
