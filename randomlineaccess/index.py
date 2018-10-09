@@ -16,19 +16,19 @@ def create_index(file_path, index_path, index_ratio, index_width):
     """
     i = 0
     with file_path.open() as f:
-        with index_path.open('wb') as idx:
-            idx.write(index_ratio.to_bytes(1, byteorder='big'))
-            idx.write(index_width.to_bytes(1, byteorder='big'))
-            idx.write((0).to_bytes(32, byteorder='big'))  # holder for line_count that we'll write at the end
-            idx.write((0).to_bytes(index_width, byteorder='big'))
+        with index_path.open("wb") as idx:
+            idx.write(index_ratio.to_bytes(1, byteorder="big"))
+            idx.write(index_width.to_bytes(1, byteorder="big"))
+            idx.write((0).to_bytes(32, byteorder="big"))  # holder for line_count that we'll write at the end
+            idx.write((0).to_bytes(index_width, byteorder="big"))
             while f.readline():
                 i += 1
                 if (i % index_ratio) == 0:
                     pointer = f.tell()
-                    b = pointer.to_bytes(index_width, byteorder='big')
+                    b = pointer.to_bytes(index_width, byteorder="big")
                     idx.write(b)
             idx.seek(2)
-            idx.write(i.to_bytes(32, byteorder='big'))
+            idx.write(i.to_bytes(32, byteorder="big"))
         t = file_path.stat().st_mtime
         os.utime(str(index_path), (t, t))
 
@@ -97,7 +97,7 @@ class IndexedOpen(object):
     @property
     def index_path(self):
         """the path to the index file"""
-        return Path(str(self.filepath) + '.idx')
+        return Path(str(self.filepath) + ".idx")
 
     def _get_lines(self, start, stop=None):
         if stop is None:
@@ -130,10 +130,10 @@ class IndexFile(object):
         self.index_file = self._open_index()
 
     def _open_index(self):
-        index = self.index_path.open('rb')
-        self.index_ratio = int.from_bytes(index.read(1), byteorder='big')
-        self.index_width = int.from_bytes(index.read(1), byteorder='big')
-        self.line_count = int.from_bytes(index.read(32), byteorder='big')
+        index = self.index_path.open("rb")
+        self.index_ratio = int.from_bytes(index.read(1), byteorder="big")
+        self.index_width = int.from_bytes(index.read(1), byteorder="big")
+        self.line_count = int.from_bytes(index.read(32), byteorder="big")
         return index
 
     def close(self):
@@ -143,6 +143,6 @@ class IndexFile(object):
         index_line_no = math.floor(line_no / self.index_ratio)
         self.index_file.seek(index_line_no * self.index_width + self.header_length)
         main_file_pointer = self.index_file.read(self.index_width)
-        main_file_pointer = int.from_bytes(main_file_pointer, byteorder='big')
+        main_file_pointer = int.from_bytes(main_file_pointer, byteorder="big")
         lines_away_from_target = line_no % self.index_ratio
         return main_file_pointer, lines_away_from_target

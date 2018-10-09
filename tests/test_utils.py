@@ -27,4 +27,4 @@ def test_slices():
         assert s[-101]
 
     with pytest.raises(TypeError):
-        assert s['hello']
+        assert s["hello"]

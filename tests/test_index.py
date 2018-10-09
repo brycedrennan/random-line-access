@@ -6,11 +6,11 @@ from randomlineaccess.index import IndexedOpen
 
 
 def create_num_file(size):
-    text_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
+    text_file = tempfile.NamedTemporaryFile(mode="w", delete=False)
     num_list = []
     for i in range(size):
-        text_file.write('%i\n' % i)
-        num_list.append(str(i) + '\n')
+        text_file.write("%i\n" % i)
+        num_list.append(str(i) + "\n")
     text_file.close()
 
     # did we create the temporary file properly?
@@ -24,7 +24,7 @@ def test_random_line():
     text_file_name, num_list = create_num_file(5)
 
     with IndexedOpen(text_file_name) as indexed_f:
-        pw = ''.join(indexed_f.random_line().strip() for _ in range(200))
+        pw = "".join(indexed_f.random_line().strip() for _ in range(200))
 
     # selected from all possible values
     assert len(set(pw)) == 5
@@ -64,12 +64,12 @@ def test_index_updates():
     with IndexedOpen(text_file_name) as f:
         assert first_index_updated_time == f.index.index_path.stat().st_mtime
 
-    time.sleep(.01)
+    time.sleep(0.01)
 
     # change text file
-    with open(text_file_name, 'w') as text_file:
+    with open(text_file_name, "w") as text_file:
         for i in range(10):
-            text_file.write('%i\n' % i)
+            text_file.write("%i\n" % i)
 
     # modified time on index changes to match modified file
     with IndexedOpen(text_file_name) as f:
