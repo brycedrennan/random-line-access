@@ -33,7 +33,7 @@ def create_index(file_path, index_path, index_ratio, index_width):
         os.utime(str(index_path), (t, t))
 
 
-class IndexedOpen(object):
+class IndexedOpen:
     """
     Indexed text file reader.
 
@@ -81,8 +81,11 @@ class IndexedOpen(object):
                 # if we have a group of lines to read, only use the index to find the first lines
                 return self._get_lines(start, stop)
             return [self._get_lines(i)[0] for i in range(start, stop, step)]
-        elif isinstance(slice_obj, int):
+
+        if isinstance(slice_obj, int):
             return self._get_lines(start)[0]
+
+        return None
 
     def close(self):
         self.file.close()
@@ -120,7 +123,7 @@ class IndexedOpen(object):
         return self[random.randrange(0, self.index.line_count)]
 
 
-class IndexFile(object):
+class IndexFile:
     def __init__(self, index_file_path):
         """
         Open a line-number index for a text file.
