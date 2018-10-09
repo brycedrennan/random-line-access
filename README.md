@@ -1,5 +1,8 @@
 # Random Text File Access (by line number)
 
+[![build status](https://travis-ci.org/brycedrennan/random-line-access.svg?branch=master)](https://travis-ci.org/brycedrennan/random-line-access)
+
+
 Quickly access arbitrary line numbers in a text file. A well tested library for Python 3.
 
 ## Installation
@@ -20,7 +23,6 @@ with IndexedOpen('xkcd_wordlist.txt') as indexed_f:
     print(indexed_f[-4:-2])  # ["zygosis\n", "zygote\n"]
     print(indexed_f[5])      # "'nother\n"
 ```
-
 
 ## Author
 
