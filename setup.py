@@ -1,6 +1,6 @@
 from distutils.core import setup  # noqa
 
-__version__ = '1.05'
+__version__ = "1.05"
 
 long_description = """
 Quickly access arbitrary line numbers in a text file. A well tested library for Python 3.
@@ -22,7 +22,7 @@ setup(
     author="Bryce Drennan",
     author_email="random-line-access@brycedrennan.org",
     url="https://github.com/brycedrennan/random-line-access",
-    download_url='https://github.com/brycedrennan/random-line-access/tarball/' + __version__,
+    download_url="https://github.com/brycedrennan/random-line-access/tarball/" + __version__,
     keywords=["linecache", "random access", "text file", "indexing"],
     classifiers=[
         "Programming Language :: Python",
@@ -33,6 +33,6 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    license='MIT',
-    long_description=long_description
+    license="MIT",
+    long_description=long_description,
 )

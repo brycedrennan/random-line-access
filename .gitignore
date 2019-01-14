@@ -46,3 +46,5 @@ MANIFEST
 
 .direnv
 randomlineaccess.egg-info
+.python-version
+.pytest_cache

@@ -1,3 +1,3 @@
 from .index import IndexedOpen
 
-__version__ = '1.05'
+__version__ = "1.05"

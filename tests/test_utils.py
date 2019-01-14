@@ -4,7 +4,7 @@ from randomlineaccess.utils import normalize_slice
 
 
 def test_slices():
-    class SliceTester(object):
+    class SliceTester:
         def __getitem__(self, item):
             return normalize_slice(item, 100)
 
@@ -27,4 +27,4 @@ def test_slices():
         assert s[-101]
 
     with pytest.raises(TypeError):
-        assert s['hello']
+        assert s["hello"]
